@@ -1,0 +1,34 @@
+{% extends "head.html" %}
+
+{% block body %}
+
+<div class="limiter">
+    {% include "header.html" %}
+    <div class="container-table100">
+        <div class="wrap-table100" style="text-align: center;">
+            <div class="table100">
+                    <div style="margin-bottom: 5%;" id="index-title">
+                        <h1 style="">{{ title }}</h1>
+                    </div>
+                    <button type="submit" style="border-width:3px;width: 25%;" class="btn btn-outline-success">
+                        <a style="color:unset; padding: 0 20%;" href="{{ route_play }}">ÁUDIOS ONLINE</a>
+                    </button><br><br>
+                    <button type="submit" style="border-width:3px;width: 25%;" class="btn btn-outline-success">
+                        <a style="color:unset; padding: 0 20%;" href="{{ route_play_discord }}">DISCORD BOTS</a>
+                    </button><br><br>
+                    <button type="submit" style="border-width:3px;width: 25%;" class="btn btn-outline-secondary">
+                        <a style="color:unset; padding: 0 20%;" href="{{ route }}">UPLOADS</a>
+                    </button><br><br>
+                    <button type="submit" style="border-width:3px;width: 25%;" class="btn btn-outline-secondary">
+                        <a style="color:unset; padding: 0 20%;" href="{{ route_audios }}">LISTA DE AUDIOS</a>
+                    </button><br><br>
+                    <button type="submit" style="border-width:3px;width: 25%;" class="btn btn-outline-secondary">
+                        <a style="color:unset; padding: 0 20%;" href="{{ route_train }}">TREINAR BOT</a>
+                    </button><br><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

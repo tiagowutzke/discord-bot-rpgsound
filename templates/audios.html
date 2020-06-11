@@ -1,0 +1,135 @@
+{% extends "head.html" %}
+
+{% block body %}
+<div class="limiter">
+{% include "header.html" %}
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div style="margin-bottom: 5%;" id="index-title"\>
+                <h1 style="">{{ title }}</h1>
+            </div>
+            {% for audio in audios %}
+            <h3 class="sound-title">{{ titles[ loop.index ] }}</h3><br><br>
+               <div style="display:flex; margin-bottom: 1em;">
+                   <span style="margin-right: 1em;">Busca por: </span>
+                    <input type="text" style="padding: 0 0.5em; margin-right: 1em;" placeholder="tag" onkeyup="search_audio(this, 'tag', '{{ titles_ids[ loop.index ] }}' )" name="tag"/>
+                    <input type="text" style="padding: 0 0.5em; margin-right: 1em;" placeholder="validação"  onkeyup="search_audio(this, 'validation', '{{ titles_ids[ loop.index ] }}' )" name="validation"/>
+                </div>
+                <div class="table100 tableFixHead">
+                    {% set outer_loop = loop %}
+                    <table style="overflow: auto;margin-bottom: 0;" class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th style="color:white;" scope="col">#</th>
+                              <th style="color:white;" scope="col">Tag</th>
+                              <th style="color:white;" scope="col">Validação</th>
+                              <th style="color:white;" scope="col">Arquivo</th>
+                              <th style="color:white;" scope="col">Ações</th>
+                            </tr>
+                          </thead>
+                          <tbody id="tbody_{{ titles_ids[ loop.index ] }}">
+                            {% for id, tag, validation, s3_file, filename in audio %}
+                                <tr>
+                                  <th scope="row">
+                                    <div
+                                        class="speaker"
+                                        id="speaker_{{ titles_ids[outer_loop.index] }}{{ loop.index }}"
+                                        onclick="play_audio(
+                                                '#player{{ titles_ids[outer_loop.index] }}{{ loop.index }}',
+                                                '#speaker_{{ titles_ids[outer_loop.index] }}{{ loop.index }}'
+                                            )"
+                                    >
+                                        <audio id="player{{ titles_ids[outer_loop.index] }}{{ loop.index }}">
+                                            <source src="{{ s3_file }}" type="audio/ogg" />
+                                            <source src="{{ s3_file }}" type="audio/mp3" />
+                                            <source src="{{ s3_file }}" type="audio/wav" />
+                                        </audio>
+                                    </div>
+                                    </span>
+                                  </th>
+                                      <!-- Tag edit-->
+                                      <td style="padding-top: 0.8em;">
+                                          <span id="text_{{ titles_ids[outer_loop.index] }}{{ loop.index }}">{{ tag }}</span>
+                                          <form id="form_tag_{{ titles_ids[outer_loop.index] }}{{ loop.index }}" action="{{ route_update_audio }}" method="post">
+                                              <input type="hidden" value="{{ titles_ids[outer_loop.index] }}" name="table" />
+                                              <input type="hidden" value="tag" name="column" />
+                                              <input type="hidden" value="{{ id }}" name="id" />
+                                              <input style="display:none; padding: 0.3em; width: 11em;" type="text" name="tag"
+                                                     id="input_{{ titles_ids[outer_loop.index] }}{{ loop.index }}" value="{{ tag }}">
+                                          </form>
+                                          <span id="edit_{{ titles_ids[outer_loop.index] }}{{ loop.index }}"
+                                                onclick="show_edit_options(this, '{{ titles_ids[outer_loop.index] }}{{ loop.index }}')"
+                                                style="display: block;">
+                                              <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/edit.png') }}" />
+                                          </span>
+                                          <span id="cancel_{{ titles_ids[outer_loop.index] }}{{ loop.index }}" style="display: none;"
+                                                onclick="cancel_edit_options(this, '{{ titles_ids[outer_loop.index] }}{{ loop.index }}')">
+                                              <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/cancel.png') }}" />
+                                          </span>
+                                          <span id="save_{{ titles_ids[outer_loop.index] }}{{ loop.index }}" style=" display:none;"
+                                                onclick="save_edit_audio('form_tag_{{ titles_ids[outer_loop.index] }}{{ loop.index }}')">
+                                              <img style="width: 16px; margin: 0.6em 0 0 0.7em;" src="{{ url_for('static', filename='images/save.png') }}" />
+                                          </span>
+                                      </td>
+
+                                      <!-- Validation edit-->
+                                      <td style="padding-top: 0.8em;">
+                                          <span style="top: 0.1em;" id="text_val_{{ titles_ids[outer_loop.index] }}{{ loop.index }}">{{ validation }}</span>
+                                          <form id="form_val_{{ titles_ids[outer_loop.index] }}{{ loop.index }}" action="{{ route_update_audio }}" method="post">
+                                              <input type="hidden" value="{{ titles_ids[outer_loop.index] }}" name="table" />
+                                              <input type="hidden" value="validation" name="column" />
+                                              <input type="hidden" value="{{ tag }}" name="tag" />
+                                              <input type="hidden" value="{{ id }}" name="id" />
+                                              <input style="display:none; padding: 0.3em; width: 11em;" type="text" name="validation"
+                                                     id="input_val_{{ titles_ids[outer_loop.index] }}{{ loop.index }}" value="{{ validation }}"
+                                              >
+                                              <span id="check_val_{{ titles_ids[outer_loop.index] }}{{ loop.index }}"
+                                                    class="input-group-text" style="display: none;"
+                                                    data-toggle="tooltip" data-placement="right" data-delay="1500"
+                                                    title="Marque esta opção para além deste áudio, salvar a validação para todos os outros áudios que tenham essa mesma tag" >
+                                                  <label style="cursor: pointer; display: flex;">
+                                                      <input style="margin-right: 0.5em;" name="all-tags" type="checkbox" aria-label="Checkbox for following text input" />
+                                                      Atualizar todas as tags?
+                                                  </label>
+                                              </span>
+                                          </form>
+                                          <span id="edit_val_{{ titles_ids[outer_loop.index] }}{{ loop.index }}"
+                                                onclick="show_edit_options(this, 'val_{{ titles_ids[outer_loop.index] }}{{ loop.index }}')"
+                                                style="display: block;"
+                                          >
+                                              <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/edit.png') }}" />
+                                          </span>
+                                          <span id="cancel_val_{{ titles_ids[outer_loop.index] }}{{ loop.index }}" style="display: none;"
+                                                onclick="cancel_edit_options(this, 'val_{{ titles_ids[outer_loop.index] }}{{ loop.index }}')"
+                                          >
+                                              <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/cancel.png') }}" />
+                                          </span>
+                                          <span id="save_val_{{ titles_ids[outer_loop.index] }}{{ loop.index }}" style=" display:none;"
+                                                onclick="save_edit_audio('form_val_{{ titles_ids[outer_loop.index] }}{{ loop.index }}')"
+                                          >
+                                              <img style="width: 16px; margin: 0.6em 0 0 0.7em;" src="{{ url_for('static', filename='images/save.png') }}" />
+                                          </span>
+                                      </td>
+                                      <td style="padding-top: 2%;">{{ filename }}</td>
+                                      <td style="padding-top: 2%;">
+                                          <form id="form_delete_{{ titles_ids[outer_loop.index] }}{{ loop.index }}" action="{{ route_delete_audio }}" method="post">
+                                              <input type="hidden" value="{{ titles_ids[outer_loop.index] }}" name="table" />
+                                              <input type="hidden" value="{{ filename }}" name="file" />
+                                              <input type="hidden" value="{{ id }}" name="id" />
+                                          </form>
+                                          <span onclick="delete_audio('form_delete_{{ titles_ids[outer_loop.index] }}{{ loop.index }}')">
+                                            <img style="width: 25px; margin-left: 0.5em;" src="{{ url_for('static', filename='images/delete.png') }}" />
+                                          </span>
+                                      </td>
+                                </tr>
+                            {% endfor %}
+                          </tbody>
+                    </table>
+                </div>
+
+        {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

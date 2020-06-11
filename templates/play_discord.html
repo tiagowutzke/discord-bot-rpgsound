@@ -1,0 +1,66 @@
+{% extends "head.html" %}
+
+{% block body %}
+
+<script>
+function copyToClipboard(element) {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+}
+
+</script>
+
+<div class="limiter">
+    {% include "header.html" %}
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+                    <div style="margin-bottom: 5%;" id="index-title">
+                        <h1 style="">{{ title }}</h1>
+                    </div>
+                    {% set image = url_for('static', filename='images/discord-bot.png') %}
+
+                    <button style="margin: 2% 35%;" onclick="start_transcription('', '', true);">
+                            <img id="sound_icon" src="{{ image }}" style="opacity: 0.3; width: 10em; margin: 0 42%;" />
+                    </button>
+                    <p id="output" style="text-align: center; margin-bottom: 2;">
+                            Clique para ligar os bots e dar o play manual ou pela captura de voz.
+                    </p><br>
+                    <p>
+                        <span style="font-weight: bold;">Comandos no Discord</span><br><br>
+                    </p>
+                   <p>
+                        <span>Tocar um áudio específico (substitua a palavra "tag" pela tag cadastrada no upload do arquivo):</span><br><br>
+                        <span id="m-tag" style="background: white; padding: 0.7%;margin-right: 1%;"> music_play tag </span>
+                        <button type="button" class="btn btn-light" onclick="copyToClipboard('#m-tag');">copy</button><br>
+
+                        <span id="a-tag" style="background: white; padding: 0.7%;margin-right: 1%;"> ambience_play tag </span>
+                        <button type="button" class="btn btn-light" onclick="copyToClipboard('#a-tag');">copy</button><br>
+
+                        <span id="s-tag" style="background: white; padding: 0.7%;margin-right: 1%;"> sound_play tag </span>
+                        <button type="button" class="btn btn-light" onclick="copyToClipboard('#s-tag');">copy</button><br>
+
+                    </p><br>
+
+                    <p>
+                        <span>Parar a execução da música/som atual:</span><br><br>
+                        <span id="m-tag" style="background: white; padding: 0.7%;margin-right: 1%;"> music_stop tag </span>
+                        <button type="button" class="btn btn-light" onclick="copyToClipboard('#m-tag');">copy</button><br>
+
+                        <span id="a-tag" style="background: white; padding: 0.7%;margin-right: 1%;"> ambience_stop tag </span>
+                        <button type="button" class="btn btn-light" onclick="copyToClipboard('#a-tag');">copy</button><br>
+
+                        <span id="s-tag" style="background: white; padding: 0.7%;margin-right: 1%;"> sound_stop tag </span>
+                        <button type="button" class="btn btn-light" onclick="copyToClipboard('#s-tag');">copy</button><br>
+
+                    </p><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

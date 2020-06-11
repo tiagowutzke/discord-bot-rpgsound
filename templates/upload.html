@@ -1,0 +1,81 @@
+{% extends "head.html" %}
+
+{% block body %}
+
+<script>
+
+</script>
+
+<div class="limiter">
+    {% include "header.html" %}
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+				<div style="margin-bottom: 5%;" id="index-title">
+					<h2 style="">{{ title }}</h2>
+				</div>
+				<p>
+					{% with messages = get_flashed_messages() %}
+					  {% if messages %}
+						<ul class=flashes>
+						{% for message in messages %}
+						  <li>{{ message }}</li>
+						{% endfor %}
+						</ul>
+					  {% endif %}
+					{% endwith %}
+				</p><br>
+
+				<form id="up-file-form" method="post" onsubmit="{{ submit_route }}" enctype="multipart/form-data">
+					<dl>
+						<input type="file" name="file" id="file_input" autocomplete="off">
+						<div id="warning" style="color: red;display: none;">O tamanho do arquivo é maior que o limite de upload de <b>35mb</b>!</div>
+						<span style="font-style: italic; font-size: smaller; color: gray;">
+							Tamanho máximo permitido: <b>35mb</b>
+						</span>
+						<br><br>
+
+						<span class="input-group-text" id="inputGroup-sizing-default">
+							Validação do áudio
+							# set validation_tip = """
+							 	A validação é o conteúdo do texto que o bot irá usar para identificar o áudio.
+								Escreva frases que façam sentido no uso do áudio. Separe cada frase por ponto e vírgula (;) no campo abaixo.
+							    """
+							<svg data-toggle="tooltip" data-placement="top" title="{{ validation_tip }}" data-delay="500" class="bi bi-question-square-fill" width="0.8em" height="0.8em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  								<path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm4.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/>
+							</svg>
+						</span><br>
+						<input type="text" id="validacao" name="validacao" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+
+					    <span class="input-group-text" id="inputGroup-sizing-default">
+							Tag
+							# set tag_tip = '''
+							 	A tag é uma "categoria", ou "chave" pela qual o bot irá identificar o áudio. Pode ser uma ou mais palavras, porém não deve haver espaço entre elas.
+							    '''
+							<svg data-toggle="tooltip" data-placement="top" title="{{ tag_tip }}" data-delay="500" class="bi bi-question-square-fill" width="0.8em" height="0.8em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  								<path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm4.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/>
+							</svg>
+						</span><br>
+						<input type="text" id="tag" name="tag" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+
+					    <span class="input-group-text" id="inputGroup-sizing-default">Tipo </span>
+						<select class="custom-select" id="inputGroupSelect01" onchange="setInputValue('option', this);">
+							<option value="musica_ambiente">Música</option>
+							<option value="som_ambiente">Som ambiente</option>
+							<option value="efeito_sonoro">Efeito sonoro</option>
+						</select>
+						<input hidden type="text" id="option" value="musica_ambiente" name="option">
+					</dl><br><br>
+					<button id="btn-submit" type="submit" value="submit" style="border-width:3px;width: 25%;" class="btn btn-outline-info">
+                        <a id="btn-text" style="color:unset">ENVIAR</a>
+						<a id="divMsg" style="width: 2%; margin-left: 1%; display:none;">
+    						<img style="width: 35px;padding-right: 0.5em;" src="{{ url_for('static', filename='images/loading.gif') }}" alt="Please wait.." />
+						</a>
+                    </button>
+				</form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

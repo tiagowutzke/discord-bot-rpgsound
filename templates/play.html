@@ -1,0 +1,62 @@
+{% extends "head.html" %}
+
+{% block body %}
+
+<script>
+function copyToClipboard(element) {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+}
+
+</script>
+
+<div class="limiter">
+    {% include "header.html" %}
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+                    <div style="margin-bottom: 5%;" id="index-title">
+                        <h1 style="">{{ title }}</h1>
+                    </div>
+<!--                    <a href="/start_bots" id=test>-->
+                    {% set image_on = url_for('static', filename='images/sound_on.png') %}
+                    {% set image_off = url_for('static', filename='images/sound_off.png') %}
+
+                    <button style="margin: 2% 35%;" onclick="start_transcription('{{ image_on }}', '{{ image_off }}', false);">
+                            <img id="sound_icon" src="{{ image_off }}" style="opacity: .6; width: 10em; margin: 0 42%;" />
+                    </button>
+                    <p id="output" style="text-align: center; margin-bottom: 2;">
+                        {% with messages = get_flashed_messages() %}
+                              {% if messages %}
+                                <ul class=flashes>
+                                {% for message in messages %}
+                                  <li>{{ message }}</li>
+                                {% endfor %}
+                                </ul>
+                              {% else %}
+                                Clique iniciar a captura de áudio e a classificação.
+                              {% endif %}
+                        {% endwith %}
+                    </p><br>
+
+                    <p>
+                        <span style="font-weight: bold;">Comandos no navegador</span><br><br>
+                    </p>
+                    <p>
+                        <span>Parar a execução das músicas/sons:</span><br><br>
+                    </p>
+                    <p>
+                        <span>Fale: <span id="m-off" style="background: white; padding: 0.7%;margin-right: 1%;">parar música</span> para parar a reprodução das <b>músicas ambientes</b>.<br>
+                        <span>Fale: <span id="m-off" style="background: white; padding: 0.7%;margin-right: 1%;">parar som</span> para parar a reprodução dos <b>sons ambientes</b>.<br>
+                        <span>Fale: <span id="m-off" style="background: white; padding: 0.7%;margin-right: 1%;">parar música</span> para parar a reprodução dos <b>efeitos sonoros</b>.<br>
+                    </p><br><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

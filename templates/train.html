@@ -1,0 +1,66 @@
+{% extends "head.html" %}
+
+{% block body %}
+
+<script>
+    $(document).ready(function() {
+        load_suggestions('no_transactions', 'no_id', 'no_score');
+    });
+</script>
+
+<div class="limiter">
+    {% include "header.html" %}
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+                <div style="margin-bottom: 5%;display:inline-flex;" id="index-title">
+                    <h1 style="">{{ title }}</h1>
+                    <div style="margin-left: 33em;text-align:right;line-height:1.1;">
+                        <span style="font-size: 0.7em;">Último treino: {{ train_date }}</span><br>
+                        {% set status_btn = '' %}
+                        {% set href = '/train_model' %}
+                        {% set description = 'O processo de treinamento é feito diretamente no servidor e pode levar alguns minutos para ser concluído.' %}
+                        {% if status == 'SUCCESS' %}
+                            <span style="font-size: 0.7em;">Status: <b style="color: green;">{{ status }}</b></span><br>
+                        {% elif status == 'WAITING' %}
+                            {% set status_btn = 'disabled' %}
+                            {% set href = '#' %}
+                            {% set description = 'Treinamento em andamento' %}
+                            <span style="font-size: 0.7em;">Status: <img style="width: 20px;padding-right: 0.5em;" src="{{ url_for('static', filename='images/train_loading.gif') }}" alt="Please wait.." /></span><br>
+                        {% else %}
+                            <span style="font-size: 0.7em;">Status: <b data-toggle="tooltip" data-placement="bottom" title="{{ message }}" data-delay="500" style="color: red;">{{ status }}</b></span><br>
+                        {% endif %}
+                    </div>
+                </div>
+                <div style="text-align:center;margin-top:5%;">
+                    <button id="btn-submit" {{ status_btn }} onclick="start_train('{{ href }}');" style="border-width:3px;width: 40%;font-size:1.5em;" class="btn btn-outline-success">
+                        <span id="btn-text" style="color:unset">INICIAR TREINAMENTO</span>
+                        <span id="divMsg" style="width: 2%; margin-left: 1%; display:none;">
+                            <img style="width: 60px;padding-right: 0.5em;" src="{{ url_for('static', filename='images/train_loading.gif') }}" alt="Please wait.." />
+                        </span>
+                    </button>
+
+                        </button>
+                </div>
+                <p style="text-align: center; margin: 2% 0;">
+                   *<i style="color:gray;">{{ description }}</i>
+                </p><br>
+                <h3 class="sound-title">Aprimorar os bots</h3><br><br>
+                <div style="width: 100%; margin-bottom: 1em;">
+                    <span style="margin-right: 1em;">Busca por: </span><br>
+                    <div style="display:inline-flex;">
+                        <input style="width: 10em;padding: 0.5em" type="number" step="any" min="0" max="1" style="padding: 0 0.5em; margin-right: 1em;" placeholder="Score mínimo" onkeyup="load_suggestions('search', '', this);" name="tag"/>
+                        <button id="btn-delete-all" onclick="delete_suggestions();" style="margin-left: 44.2em;border-width:2px;" class="btn btn-outline-danger">
+                            <span id="delete-all-txt">APAGAR SUGESTÕES</span>
+                            <img id="delete-all-gif" style="display:none; width: 30px;margin: 0 4em;" src="{{ url_for('static', filename='images/loading_red.gif') }}" alt="Please wait.." />
+                        </button>
+                    </div>
+                </div>
+                <div id="table_suggestions"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{{ url_for('index')}}">
+    <img src="{{ url_for('static', filename='images/discord-bot.png') }}" width="50" height="40" class="d-inline-block align-top" alt="">
+  </a>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item {% if request.path == url_for('play_page') %} active {% endif %}">
+        <a class="nav-link" href="{{ url_for('play_page')}}">AUDIOS ONLINE</a>
+      </li>
+      <li class="nav-item {% if request.path == url_for('play_page_discord') %} active {% endif %}">
+        <a class="nav-link" href="{{ url_for('play_page_discord')}}">DISCORD BOTS</a>
+      </li>
+      <li class="nav-item {% if request.path == url_for('upload_form') %} active {% endif %}">
+        <a class="nav-link" href="{{ url_for('upload_form')}}">UPLOADS</a>
+      </li>
+      <li class="nav-item {% if request.path == url_for('audios_list') %} active {% endif %}">
+        <a class="nav-link" href="{{ url_for('audios_list')}}">ÁUDIOS</a>
+      </li>
+      <li class="nav-item {% if request.path == url_for('train_page') %} active {% endif %}">
+        <a class="nav-link" href="{{ url_for('train_page')}}">TREINAR BOT</a>
+      </li>
+      <li class="nav-item {% if request.path == url_for('open_config') %} active {% endif %}">
+        <a class="nav-link" href="{{ url_for('open_config')}}">CONFIGURAÇÕES</a>
+      </li>
+    </ul>
+</nav>
+
+{% block nav %}{% endblock %}

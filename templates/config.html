@@ -1,0 +1,113 @@
+{% extends "head.html" %}
+
+{% block body %}
+
+<div class="limiter">
+    {% include "header.html" %}
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+				<div style="margin-bottom: 5%;" id="index-title">
+					<h2 style="">{{ title }}</h2>
+				</div>
+				<p>
+					{% with messages = get_flashed_messages() %}
+					  {% if messages %}
+						<ul class=flashes>
+						{% for message in messages %}
+						  <li>{{ message }}</li>
+						{% endfor %}
+						</ul>
+					  {% endif %}
+					{% endwith %}
+				</p><br>
+				<div>
+					<h3>Setup inicial</h3>
+					<p>Siga os passos abaixo para realizar a configuração inicial do bot. É necessário realizar este processo apenas uma vez.</p><br>
+					<h4>Autorizar bots</h4>
+					<p>
+						Clique nos links abaixo para autorizar os bots no canal do discord:<br>
+						<a target="_blank" href="https://discordapp.com/api/oauth2/authorize?client_id=697529485888716823&permissions=8&scope=bot">
+							Autorizar Ambience Bot
+						</a><br>
+						<a target="_blank" href="https://discordapp.com/api/oauth2/authorize?client_id=697266675749224478&permissions=8&scope=bot">
+							Autorizar Sound Bot
+						</a><br>
+						<a target="_blank" href="https://discordapp.com/api/oauth2/authorize?client_id=696874651749580815&permissions=8&scope=bot">
+							Autorizar Music Bot
+						</a><br>
+					</p><br>
+				</div><br><br>
+				<div>
+					<h4>Ids dos canais discord</h4>
+					<p>Após realizar o setup acima, informe os ids dos canais do discord. Para consultar os ids dos canais, faça o seguinte:<br>
+						1 - Abra o discord e vá até configurações > aparência > ativar modo desenvolvedor<br>
+						2 - Clique com o botão direito no canal de voz e de texto desejado e clique em "Copiar ID"
+					</p><br>
+					<form id="up-file-form" method="post" onsubmit="{{ submit_route }}" enctype="multipart/form-data">
+						<dl>
+							<span>ID do canal de texto:</span><br>
+							<input type="text" id="text_id" name="text_id" class="form-control" aria-label="Default" value="{{ text_id }}">
+						</dl><br>
+						<dl>
+							<span>ID do canal de voz:</span><br>
+							<input type="text" id="voice_id" name="voice_id" class="form-control" aria-label="Default" value="{{ voice_id }}">
+						</dl><br>
+						<span><b>Validações de score</b></span><br><br>
+						<dl>
+							<span>
+								Classificação única:
+								# set single_tip = """
+							 		Quando o resultado da classificação do bot for uma única label, defina
+									o score mínimo válido para que o bot considere que essa label é valida.
+							      """
+								<svg data-toggle="tooltip" data-placement="right" title="{{ single_tip }}" data-delay="500" class="bi bi-question-square-fill" width="0.8em" height="0.8em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm4.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/>
+								</svg>
+							</span>
+							<input type="text" id="score_single" name="score_single" class="score-inputs form-control" aria-label="Default" value="{{ score_single }}">
+						</dl>
+						<dl>
+							<span>
+								Várias classificações:
+								# set multiple_tip = """
+							 		Quando o resultado da classificação do bot resultar em várias labels, defina
+									o score mínimo válido para que o bot considere que essa label com score mais
+									alto é valida. O ideal é que este score seja maior que o da classificação única.
+							      """
+								<svg data-toggle="tooltip" data-placement="right" title="{{ multiple_tip }}" data-delay="500" class="bi bi-question-square-fill" width="0.8em" height="0.8em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm4.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/>
+								</svg>
+							</span>
+							<input type="text" id="score_multiple" name="score_multiple" class="score-inputs form-control" aria-label="Default" value="{{ score_multiple }}">
+						</dl>
+						<dl>
+							<span>
+								Sugestões:
+								# set suggestion_tip = """
+							 		Quando o resultado da classificação do bot resultar em scores não válidos, é
+									possível guardar os resultados mais próximos para treinamento do bot. Defina
+									o score mínimo válido para guardar sugestões de treinamento.
+							      """
+								<svg data-toggle="tooltip" data-placement="right" title="{{ suggestion_tip }}" data-delay="500" class="bi bi-question-square-fill" width="0.8em" height="0.8em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm4.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/>
+								</svg>
+							</span>
+							<input type="text" id="score_suggestion" name="score_suggestion" class="score-inputs form-control" aria-label="Default" value="{{ score_suggestion }}">
+						</dl><br>
+						<!-- Submit-->
+						<button id="btn-submit" type="submit" value="submit" style="border-width:3px;width: 28%;" class="btn btn-outline-info">
+							<a id="btn-text" style="color:unset; padding: 0 10%;">SALVAR CONFIGURAÇÃO</a>
+							<a id="divMsg" style="width: 2%; margin-left: 1%; display:none;">
+								<img style="width: 35px;padding-right: 0.5em;" src="{{ url_for('static', filename='images/loading.gif') }}" alt="Please wait.." />
+							</a>
+						</button>
+
+					</form>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

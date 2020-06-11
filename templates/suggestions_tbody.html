@@ -1,0 +1,65 @@
+<script>
+   $(document).ready(function() {
+       $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+       })
+    });
+
+    function show_loading_buttons(to_hide, to_show){
+        $('#table_suggestions :button').prop('disabled', true);
+        $('#table_suggestions :button').css('opacity', '0.5');
+        $(to_hide).hide();
+        $(to_show).show();
+    }
+</script>
+
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <p style="color: red; margin: 2% 0;">
+            {{ messages[0] }}
+        </p><br>
+    {% endif %}
+{% endwith %}
+
+<div class="table100 tableFixHead">
+    <table style="overflow: auto;margin-bottom: 0;" class="table table-striped">
+          <thead>
+            <tr>
+              <th style="color:white;" scope="col">Bot</th>
+              <th style="color:white;" scope="col">Validação</th>
+              <th style="color:white;" scope="col">Tag</th>
+              <th style="color:white;" scope="col">Score</th>
+              <th style="color:white;" scope="col">
+                  Ações
+                  <span
+                      data-toggle="tooltip" data-placement="top" data-delay="500"
+                      title="Clique no botão positivo para anexar o texto da validação sugerida na validação do áudio na base de dados. Caso contrário, clique no negativo para remover a sugestão."
+                  >
+                      <img style="width: 25px;" src="{{ url_for('static', filename='images/question-icon2.png') }}" />
+                  </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for id, validation, label, bot, score in suggestions %}
+                <tr>
+                      <td style="padding-top: 1em;">{{ bot }}</td>
+                      <td style="padding-top: 1em;">{{ validation }}</td>
+                      <td style="padding-top: 1em;">{{ label }}</td>
+                      <td style="padding-top: 1em;">{{ score }}</td>
+                      <td>
+                          <button onclick="show_loading_buttons('#pos-hide{{ id }}', '#pos-show{{ id }}'); load_suggestions('update', '{{ id }}', '');">
+                              <img id="pos-hide{{ id }}" style="width: 30px;" src="{{ url_for('static', filename='images/positive-icon.png') }}" />
+                              <img id="pos-show{{ id }}" style="display:none; width: 30px;" src="{{ url_for('static', filename='images/loading_green.gif') }}" alt="Please wait.." />
+                          </button>
+                          <button onclick="show_loading_buttons('#neg-hide{{ id }}', '#neg-show{{ id }}'); load_suggestions('delete', '{{ id }}', '');">
+                              <img id="neg-hide{{ id }}" style="width: 30px;" src="{{ url_for('static', filename='images/negative-icon.png') }}" />
+                              <img id="neg-show{{ id }}" style="display:none; width: 30px;" src="{{ url_for('static', filename='images/loading_red.gif') }}" alt="Please wait.." />
+                          </button>
+                      </td>
+                </tr>
+            {% endfor %}
+          </tbody>
+    </table>
+</div>
