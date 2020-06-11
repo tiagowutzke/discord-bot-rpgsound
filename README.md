@@ -1,5 +1,7 @@
 # RPG Sound: A discord bot
 
+*__Documentation in progress__*
+
 RPG Sound is a discord bot to play sounds and musics for RPG games. The bot can be activated in two ways:
 - Automatically: by speech recogniton
 - Manually: by command inside discord channel
