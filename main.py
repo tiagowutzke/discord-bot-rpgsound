@@ -1,4 +1,5 @@
 import os
+import ast
 import requests
 import functools
 
@@ -13,7 +14,8 @@ from utils.upload_audio import send_file_to_s3, text_split_sentence_validation
 from database.adapter import get_database_objects
 
 from utils.utils import (
-    get_table_name, run_bot, delete_file_from_s3, beautify_response, make_list_from_suggestions, check_bot_run
+    get_table_name, run_bot, delete_file_from_s3, beautify_response,
+    make_list_from_suggestions, check_bot_run, remove_special_char
 )
 
 ALLOWED_EXTENSIONS = set(['mp3', 'wav', 'webm', 'ogg'])
@@ -156,13 +158,17 @@ def save_suggestions_function():
     audio_type = request.args.get('audio_type')
 
     conn, persistence, _ = get_database_objects()
-    import ast
 
+    # Casting string from js response to list
     suggestions = ast.literal_eval(suggestions)
 
     for suggestion in list(suggestions):
 
         label, score, validation = suggestion
+
+        label = remove_special_char(label)
+        audio_type = remove_special_char(audio_type)
+        validation = remove_special_char(validation)
 
         persistence.insert(
             table='label_suggestions',

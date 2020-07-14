@@ -1,3 +1,4 @@
+import re
 import os
 import boto3
 
@@ -65,3 +66,7 @@ def make_list_from_suggestions(suggestions_list, step=3):
         result.append(suggestion)
 
     return result
+
+
+def remove_special_char(string):
+    return re.sub('\W+',' ', string)
