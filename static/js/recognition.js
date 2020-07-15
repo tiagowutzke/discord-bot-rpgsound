@@ -92,7 +92,7 @@
 
         // Keep transcription alive
         recognition.onend = function() {
-            recognition.start();
+            if(mic_status == 'on') recognition.start();
         }
     };
 
