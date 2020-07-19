@@ -147,11 +147,17 @@ function play_audio(audio_id, speaker_id) {
     }
    }
 
+   // Flag to avoid call multiples unnecessary keyup events
+   var is_searching_audio = false;
+
    /* Dinamic audio search */
    function search_audio(input_text, input_name, form_id){
+        if(is_searching_audio) return false;
+        // "Locks" this keyup event so that only this function call queries the database
+        is_searching_audio = true;
+
         setTimeout(function(){
             var text = $(input_text).val();
-
             $.ajax({
               url: "/search_audios",
               type: "get",
@@ -167,6 +173,8 @@ function play_audio(audio_id, speaker_id) {
                 window.alert('Erro na busca dos audios:' + response)
               }
             });
+           // "Unlock" keyup event for new database queries
+           is_searching_audio = false;
         }, 700);
    }
 

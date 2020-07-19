@@ -370,7 +370,6 @@ def update_audio_database():
         else:
             value = tag
 
-        print(table)
         table = get_table_name(table)
 
         if update_all_tags:
@@ -513,4 +512,3 @@ def get_search_audios():
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', os.environ['PORT']))
     app.run(host='0.0.0.0', port=port, debug=True)
-

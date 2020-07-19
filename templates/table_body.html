@@ -52,36 +52,37 @@
               <form id="form_val_{{ table }}{{ loop.index }}" action="{{ route_update_audio }}" method="post">
                   <input type="hidden" value="{{ table }}" name="table" />
                   <input type="hidden" value="validation" name="column" />
+                  <input type="hidden" value="{{ tag }}" name="tag" />
                   <input type="hidden" value="{{ id }}" name="id" />
                   <input style="display:none; padding: 0.3em; width: 11em;" type="text" name="validation"
                          id="input_val_{{ table }}{{ loop.index }}" value="{{ validation }}"
                   >
+                  <span id="edit_val_{{ table }}{{ loop.index }}"
+                        onclick="show_edit_options(this, 'val_{{ table }}{{ loop.index }}')"
+                        style="display: block;"
+                  >
+                      <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/edit.png') }}" />
+                  </span>
+                  <span id="cancel_val_{{ table }}{{ loop.index }}" style="display: none;"
+                        onclick="cancel_edit_options(this, 'val_{{ table }}{{ loop.index }}')"
+                  >
+                      <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/cancel.png') }}" />
+                  </span>
+                  <span id="save_val_{{ table }}{{ loop.index }}" style=" display:none;"
+                        onclick="save_edit_audio('form_val_{{ table }}{{ loop.index }}')"
+                  >
+                      <img style="width: 16px; margin: 0.6em 0 0 0.7em;" src="{{ url_for('static', filename='images/save.png') }}" />
+                  </span>
+                  <span id="check_val_{{ table }}{{ loop.index }}"
+                        class="input-group-text" style="display: none;"
+                        data-toggle="tooltip" data-placement="right" data-delay="1500"
+                        title="Marque esta opção para além deste áudio, salvar a validação para todos os outros áudios que tenham essa mesma tag" >
+                      <label style="cursor: pointer; display: flex;">
+                          <input style="margin-right: 0.5em;" name="all-tags" type="checkbox" aria-label="Checkbox for following text input" />
+                          Atualizar todas as tags?
+                      </label>
+                  </span>
               </form>
-              <span id="edit_val_{{ table }}{{ loop.index }}"
-                    onclick="show_edit_options(this, 'val_{{ table }}{{ loop.index }}')"
-                    style="display: block;"
-              >
-                  <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/edit.png') }}" />
-              </span>
-              <span id="cancel_val_{{ table }}{{ loop.index }}" style="display: none;"
-                    onclick="cancel_edit_options(this, 'val_{{ table }}{{ loop.index }}')"
-              >
-                  <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/cancel.png') }}" />
-              </span>
-              <span id="save_val_{{ table }}{{ loop.index }}" style=" display:none;"
-                    onclick="save_edit_audio('form_val_{{ table }}{{ loop.index }}')"
-              >
-                  <img style="width: 16px; margin: 0.6em 0 0 0.7em;" src="{{ url_for('static', filename='images/save.png') }}" />
-              </span>
-              <span id="check_val_{{ table }}{{ loop.index }}"
-                    class="input-group-text" style="display: none;"
-                    data-toggle="tooltip" data-placement="right" data-delay="1500"
-                    title="Marque esta opção para além deste áudio, salvar a validação para todos os outros áudios que tenham essa mesma tag" >
-                  <label style="cursor: pointer; display: flex;">
-                      <input style="margin-right: 0.5em;" name="all-tags" type="checkbox" aria-label="Checkbox for following text input" />
-                      Atualizar todas as tags?
-                  </label>
-              </span>
           </td>
           <td style="padding-top: 2%;">{{ filename }}</td>
           <td style="padding-top: 2%;">
