@@ -370,6 +370,7 @@ def update_audio_database():
         else:
             value = tag
 
+        print(table)
         table = get_table_name(table)
 
         if update_all_tags:
@@ -490,12 +491,7 @@ def get_search_audios():
     column = request.args.get('column')
     table = request.args.get('table')
 
-    if table == 'music':
-        table = 'musica_ambiente'
-    elif table == 'ambience':
-        table = 'som_ambiente'
-    else:
-        table = 'efeito_sonoro'
+    table = get_table_name(table)
 
     conn, _, query = get_database_objects()
 

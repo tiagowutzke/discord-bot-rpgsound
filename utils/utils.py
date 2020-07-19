@@ -4,11 +4,13 @@ import boto3
 
 
 def get_table_name(table):
-    if table == 'music':
-        return 'musica_ambiente'
-    elif table == 'ambience':
-        return 'som_ambiente'
-    return 'efeito_sonoro'
+    tables = {
+        'music': 'musica_ambiente',
+        'ambience': 'som_ambiente',
+        'sound': 'efeito_sonoro'
+    }
+    # if not found, return the param himself
+    return tables.get(table) or table
 
 
 def delete_file_from_s3(file):
