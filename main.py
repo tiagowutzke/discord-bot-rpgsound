@@ -1,7 +1,10 @@
 import os
-import ast
 import requests
 import functools
+
+# TODO remover isso aqui
+from environ import set_environ_variables
+set_environ_variables()
 
 from app import app
 from werkzeug.utils import secure_filename
@@ -14,8 +17,7 @@ from utils.upload_audio import send_file_to_s3, text_split_sentence_validation
 from database.adapter import get_database_objects
 
 from utils.utils import (
-    get_table_name, run_bot, delete_file_from_s3, beautify_response,
-    make_list_from_suggestions, check_bot_run, remove_special_char
+    get_table_name, run_bot, delete_file_from_s3, beautify_response, make_list_from_suggestions, check_bot_run
 )
 
 ALLOWED_EXTENSIONS = set(['mp3', 'wav', 'webm', 'ogg'])
@@ -158,17 +160,13 @@ def save_suggestions_function():
     audio_type = request.args.get('audio_type')
 
     conn, persistence, _ = get_database_objects()
+    import ast
 
-    # Casting string from js response to list
     suggestions = ast.literal_eval(suggestions)
 
     for suggestion in list(suggestions):
 
         label, score, validation = suggestion
-
-        label = remove_special_char(label)
-        audio_type = remove_special_char(audio_type)
-        validation = remove_special_char(validation)
 
         persistence.insert(
             table='label_suggestions',
@@ -489,8 +487,15 @@ def get_search_audios():
     search = request.args.get('search_text')
     column = request.args.get('column')
     table = request.args.get('table')
+    titles_ids = request.args.get('titles_ids')
+    outer_index = request.args.get('outer_index')
 
-    table = get_table_name(table)
+    if table == 'music':
+        table = 'musica_ambiente'
+    elif table == 'ambience':
+        table = 'som_ambiente'
+    else:
+        table = 'efeito_sonoro'
 
     conn, _, query = get_database_objects()
 
@@ -505,10 +510,12 @@ def get_search_audios():
         audio=audios_query,
         table=table,
         route_update_audio=update_audio,
-        route_delete_audio=delete_audio_route
+        route_delete_audio=delete_audio_route,
+        titles_ids=titles_ids,
+        outer_index=outer_index
     )
 
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', os.environ['PORT']))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port)

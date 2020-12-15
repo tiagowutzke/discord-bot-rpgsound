@@ -3,13 +3,13 @@
       <th scope="row">
         <div
             class="speaker"
-            id="speaker_{{ table }}{{ loop.index }}"
+            id="speaker_{{ titles_ids[outer_index] }}{{ loop.index }}"
             onclick="play_audio(
-                    '#player{{ table }}{{ loop.index }}',
-                    '#speaker_{{ table }}{{ loop.index }}'
+                    '#player{{ titles_ids[outer_index] }}{{ loop.index }}',
+                    '#speaker_{{ titles_ids[outer_index] }}{{ loop.index }}'
                 )"
         >
-            <audio id="player{{ table }}{{ loop.index }}">
+            <audio id="player{{ titles_ids[outer_index] }}{{ loop.index }}">
                 <source src="{{ s3_file }}" type="audio/ogg" />
                 <source src="{{ s3_file }}" type="audio/mp3" />
                 <source src="{{ s3_file }}" type="audio/wav" />
@@ -19,81 +19,125 @@
       </th>
           <!-- Tag edit-->
           <td style="padding-top: 0.8em;">
-              <span id="text_{{ table }}{{ loop.index }}">{{ tag }}</span>
-              <form id="form_tag_{{ table }}{{ loop.index }}" action="{{ route_update_audio }}" method="post">
-                  <input type="hidden" value="{{ table }}" name="table" />
+              <span id="text_{{ titles_ids[outer_index] }}{{ loop.index }}">{{ tag }}</span>
+              <form id="form_tag_{{ titles_ids[outer_index] }}{{ loop.index }}" action="{{ route_update_audio }}" method="post">
+                  <input type="hidden" value="{{ titles_ids[outer_index] }}" name="table" />
                   <input type="hidden" value="tag" name="column" />
                   <input type="hidden" value="{{ id }}" name="id" />
                   <input style="display:none; padding: 0.3em; width: 11em;" type="text" name="tag"
-                         id="input_{{ table }}{{ loop.index }}" value="{{ tag }}"
-                  >
+                         id="input_{{ titles_ids[outer_index] }}{{ loop.index }}" value="{{ tag }}">
               </form>
-              <span id="edit_{{ table }}{{ loop.index }}"
-                    onclick="show_edit_options(this, '{{ table }}{{ loop.index }}')"
-                    style="display: block;"
-              >
+              <span id="edit_{{ titles_ids[outer_index] }}{{ loop.index }}"
+                    onclick="show_edit_options(this, '{{ titles_ids[outer_index] }}{{ loop.index }}')"
+                    style="display: block;">
                   <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/edit.png') }}" />
               </span>
-              <span id="cancel_{{ table }}{{ loop.index }}" style="display: none;"
-                    onclick="cancel_edit_options(this, '{{ table }}{{ loop.index }}')"
-              >
+              <span id="cancel_{{ titles_ids[outer_index] }}{{ loop.index }}" style="display: none;"
+                    onclick="cancel_edit_options(this, '{{ titles_ids[outer_index] }}{{ loop.index }}')">
                   <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/cancel.png') }}" />
               </span>
-              <span id="save_{{ table }}{{ loop.index }}" style=" display:none;"
-                    onclick="save_edit_audio('form_tag_{{ table }}{{ loop.index }}')"
-              >
+              <span id="save_{{ titles_ids[outer_index] }}{{ loop.index }}" style=" display:none;"
+                    onclick="save_edit_audio('form_tag_{{ titles_ids[outer_index] }}{{ loop.index }}')">
                   <img style="width: 16px; margin: 0.6em 0 0 0.7em;" src="{{ url_for('static', filename='images/save.png') }}" />
               </span>
           </td>
 
-          <!-- Validation edit-->
-          <td style="padding-top: 0.8em;">
-              <span style="top: 0.1em;" id="text_val_{{ table }}{{ loop.index }}">{{ validation }}</span>
-              <form id="form_val_{{ table }}{{ loop.index }}" action="{{ route_update_audio }}" method="post">
-                  <input type="hidden" value="{{ table }}" name="table" />
-                  <input type="hidden" value="validation" name="column" />
-                  <input type="hidden" value="{{ tag }}" name="tag" />
-                  <input type="hidden" value="{{ id }}" name="id" />
-                  <input style="display:none; padding: 0.3em; width: 11em;" type="text" name="validation"
-                         id="input_val_{{ table }}{{ loop.index }}" value="{{ validation }}"
-                  >
-                  <span id="edit_val_{{ table }}{{ loop.index }}"
-                        onclick="show_edit_options(this, 'val_{{ table }}{{ loop.index }}')"
-                        style="display: block;"
-                  >
-                      <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/edit.png') }}" />
-                  </span>
-                  <span id="cancel_val_{{ table }}{{ loop.index }}" style="display: none;"
-                        onclick="cancel_edit_options(this, 'val_{{ table }}{{ loop.index }}')"
-                  >
-                      <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/cancel.png') }}" />
-                  </span>
-                  <span id="save_val_{{ table }}{{ loop.index }}" style=" display:none;"
-                        onclick="save_edit_audio('form_val_{{ table }}{{ loop.index }}')"
-                  >
-                      <img style="width: 16px; margin: 0.6em 0 0 0.7em;" src="{{ url_for('static', filename='images/save.png') }}" />
-                  </span>
-                  <span id="check_val_{{ table }}{{ loop.index }}"
-                        class="input-group-text" style="display: none;"
-                        data-toggle="tooltip" data-placement="right" data-delay="1500"
-                        title="Marque esta opção para além deste áudio, salvar a validação para todos os outros áudios que tenham essa mesma tag" >
-                      <label style="cursor: pointer; display: flex;">
-                          <input style="margin-right: 0.5em;" name="all-tags" type="checkbox" aria-label="Checkbox for following text input" />
-                          Atualizar todas as tags?
-                      </label>
-                  </span>
-              </form>
+          {% set sentences = validation.split(";") %}
+          <td class="clickable" data-toggle="collapse" data-target=".validation-{{tag}}-{{id}}" id="sentences-{{tag}}-{{id}}" onclick="swap_visibility('#sentence-{{tag}}-{{id}}', '#hide-sentence-{{tag}}-{{id}}')">
+              <span id="sentence-{{tag}}-{{id}}">Ver {{ sentences | length }} frases <a href="#">(+)</a></span>
+              <span id="hide-sentence-{{tag}}-{{id}}" style="display: none;">Omitir frases <a href="">(-)</a></span>
           </td>
+
           <td style="padding-top: 2%;">{{ filename }}</td>
           <td style="padding-top: 2%;">
-              <form id="form_delete_{{ table }}{{ loop.index }}" action="{{ route_delete_audio }}" method="post">
-                  <input type="hidden" value="{{ table }}" name="table" />
+              <form id="form_delete_{{ titles_ids[outer_index] }}{{ loop.index }}" action="{{ route_delete_audio }}" method="post">
+                  <input type="hidden" value="{{ titles_ids[outer_index] }}" name="table" />
                   <input type="hidden" value="{{ filename }}" name="file" />
                   <input type="hidden" value="{{ id }}" name="id" />
               </form>
-              <span onclick="delete_audio('form_delete_{{ table }}{{ loop.index }}')">
+              <span onclick="delete_audio('form_delete_{{ titles_ids[outer_index] }}{{ loop.index }}')">
                 <img style="width: 25px; margin-left: 0.5em;" src="{{ url_for('static', filename='images/delete.png') }}" />
               </span>
           </td>
     </tr>
+
+    <!-- Validation edit-->
+  {% for sentence in sentences %}
+  <tr class="collapse validation-{{tag}}-{{id}}">
+      <td style="padding-top: 0.8em;" colspan="5">
+          <span style="top: 0.1em;" id="text_val_{{ titles_ids[outer_index] }}-{{loop.index}}-{{tag}}-{{id}}">{{ sentence }}</span>
+          <form id="form_val_{{ titles_ids[outer_index] }}-{{loop.index}}-{{tag}}-{{id}}" action="{{ route_update_audio }}" method="post">
+              <input type="hidden" value="{{ titles_ids[outer_index] }}" name="table" />
+              <input type="hidden" value="validation" name="column" />
+              <input type="hidden" value="{{ tag }}" name="tag" />
+              <input type="hidden" value="{{ id }}" name="id" />
+              <input style="display:none; padding: 0.3em; width: 11em;" type="textarea" name="validation" height="auto"
+                     id="input_val_{{ titles_ids[outer_index] }}-{{loop.index}}-{{tag}}-{{id}}" value="{{ sentence }}"
+              >
+              <span id="check_val_{{ titles_ids[outer_index] }}-{{loop.index}}-{{tag}}-{{id}}"
+                    class="input-group-text" style="display: none;"
+                    data-toggle="tooltip" data-placement="right" data-delay="1500"
+                    title="Marque esta opção para além deste áudio, salvar a validação para todos os outros áudios que tenham essa mesma tag" >
+                  <label style="cursor: pointer; display: flex;">
+                      <input style="margin-right: 0.5em;" name="all-tags" type="checkbox" />
+                      Atualizar todas as tags?
+                  </label>
+              </span>
+          </form>
+          <span id="edit_val_{{ titles_ids[outer_index] }}-{{loop.index}}-{{tag}}-{{id}}"
+                onclick="show_edit_options(this, 'val_{{ titles_ids[outer_index] }}-{{loop.index}}-{{tag}}-{{id}}')"
+                style="display: block;"
+          >
+              <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/edit.png') }}" />
+          </span>
+          <span id="cancel_val_{{ titles_ids[outer_index] }}-{{loop.index}}-{{tag}}-{{id}}" style="display: none;"
+                onclick="cancel_edit_options(this, 'val_{{ titles_ids[outer_index] }}-{{loop.index}}-{{tag}}-{{id}}')"
+          >
+              <img style="width: 16px; margin-top: 0.6em;" src="{{ url_for('static', filename='images/cancel.png') }}" />
+          </span>
+          <span
+                id="save_val_{{ titles_ids[outer_index] }}-{{loop.index}}-{{tag}}-{{id}}"
+                style=" display:none;"
+                onclick="
+                    update_sentence('input_val_{{ titles_ids[outer_index] }}-{{loop.index}}-{{tag}}-{{id}}', '{{ sentence }}', {{sentences}});
+                    save_edit_audio('form_val_{{ titles_ids[outer_index] }}-{{loop.index}}-{{tag}}-{{id}}')
+                "
+          >
+              <img style="width: 16px; margin: 0.6em 0 0 0.7em;" src="{{ url_for('static', filename='images/save.png') }}" />
+          </span>
+      </td>
+  </tr>
+  {% endfor %}
+  <tr class="collapse validation-{{tag}}-{{id}}">
+      <td style="padding-top: 0.8em;" colspan="5">
+          <!-- New sentence label -->
+          <span id='new-validation-label-{{id}}-{{tag}}' onclick="swap_visibility('#new-validation-label-{{id}}-{{tag}}', '#new-validation-input-{{id}}-{{tag}}')">
+              Nova frase <a href="#">(+)</a>
+          </span>
+          <div id="new-validation-input-{{id}}-{{tag}}" style="display:none;">
+              <form id="form-new-validation-{{id}}-{{tag}}" action="{{ route_update_audio }}" method="post">
+                  <!-- New sentence input text -->
+                  <input id="new-validation-text-{{id}}-{{tag}}" style="padding: 0.3em; width: 95%;" type="textarea" height="auto">
+                  <!-- New sentence cancel -->
+                  <span onclick="swap_visibility('#new-validation-input-{{id}}-{{tag}}', '#new-validation-label-{{id}}-{{tag}}')">
+                      <img style="width: 16px; margin: 0.6em 0.3em;" src="{{ url_for('static', filename='images/cancel.png') }}" />
+                  </span>
+                  <!-- New sentence save -->
+                  <span
+                    onclick="
+                        add_sentence('add-validation-{{id}}-{{tag}}', '#new-validation-text-{{id}}-{{tag}}', {{ sentences }});
+                        save_edit_audio('form-new-validation-{{id}}-{{tag}}');
+                    ">
+                      <img style="width: 16px; margin: 0.6em 0.3em;" src="{{ url_for('static', filename='images/save.png') }}" />
+                  </span>
+                  <!-- Hidden input validation -->
+                  <input id="add-validation-{{id}}-{{tag}}" type="hidden" name="validation">
+                  <input type="hidden" value="{{ titles_ids[outer_index] }}" name="table" />
+                  <input type="hidden" value="validation" name="column" />
+                  <input type="hidden" value="{{ tag }}" name="tag" />
+                  <input type="hidden" value="{{ id }}" name="id" />
+              </form>
+          </div>
+      </td>
+  </tr>
 {% endfor %}

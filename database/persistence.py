@@ -45,7 +45,6 @@ class Persistence:
                 WHERE {where_col} = {col_value}
             """
             self.connection.commit_transaction(sql)
-            print(sql)
             return True
 
         except Exception as e:
