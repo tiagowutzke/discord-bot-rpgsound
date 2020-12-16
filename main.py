@@ -1,4 +1,5 @@
 import os
+import ast
 import requests
 import functools
 
@@ -156,7 +157,6 @@ def save_suggestions_function():
     audio_type = request.args.get('audio_type')
 
     conn, persistence, _ = get_database_objects()
-    import ast
 
     suggestions = ast.literal_eval(suggestions)
 
@@ -482,16 +482,13 @@ def save_config():
 def get_search_audios():
     search = request.args.get('search_text')
     column = request.args.get('column')
-    table = request.args.get('table')
-    titles_ids = request.args.get('titles_ids')
-    outer_index = request.args.get('outer_index')
+    table_type = request.args.get('table')
 
-    if table == 'music':
-        table = 'musica_ambiente'
-    elif table == 'ambience':
-        table = 'som_ambiente'
-    else:
-        table = 'efeito_sonoro'
+    tables_names = {
+        'music': 'musica_ambiente',
+        'ambience': 'som_ambiente',
+    }
+    table = tables_names.get(table_type, 'efeito_sonoro')
 
     conn, _, query = get_database_objects()
 
@@ -507,8 +504,7 @@ def get_search_audios():
         table=table,
         route_update_audio=update_audio,
         route_delete_audio=delete_audio_route,
-        titles_ids=titles_ids,
-        outer_index=outer_index
+        sound_type=table_type
     )
 
 

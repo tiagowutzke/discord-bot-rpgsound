@@ -173,9 +173,16 @@ function play_audio(audio_id, speaker_id) {
     }
    }
 
+   should_search_audio = true // Flag to avoid simultaneous function run
+
    /* Dinamic audio search */
-   function search_audio(input_text, input_name, form_id, titles_ids, outer_index){
+   function search_audio(input_text, input_name, sound_type){
+        if(!should_search_audio) return false;
+
+        should_search_audio = false;
+
         setTimeout(function(){
+
             var text = $(input_text).val();
 
             $.ajax({
@@ -184,15 +191,15 @@ function play_audio(audio_id, speaker_id) {
               data: {
                 search_text: text,
                 column: input_name,
-                table: form_id,
-                titles_ids: titles_ids,
-                outer_index: outer_index
+                table: sound_type
               },
               success: function(response) {
-                $("#tbody_".concat(form_id)).html(response);
+                $("#tbody_".concat(sound_type)).html(response);
+                should_search_audio = true;
               },
               error: function(response) {
                 window.alert('Erro na busca dos audios:' + response)
+                should_search_audio = true;
               }
             });
         }, 1000);

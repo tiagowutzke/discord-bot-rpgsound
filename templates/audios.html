@@ -10,10 +10,11 @@
             </div>
             {% for audio in audios %}
             <h3 class="sound-title">{{ titles[ loop.index ] }}</h3><br><br>
+               {% set sound_type = titles_ids[loop.index] %}
                <div style="display:flex; margin-bottom: 1em;">
                    <span style="margin-right: 1em;">Busca por: </span>
-                    <input type="text" style="padding: 0 0.5em; margin-right: 1em;" placeholder="tag" onkeyup="search_audio(this, 'tag', '{{ titles_ids[ loop.index ] }}', [{{ titles_ids }}], '{{ loop.index }}' )" name="tag"/>
-                    <input type="text" style="padding: 0 0.5em; margin-right: 1em;" placeholder="validação"  onkeyup="search_audio(this, 'validation', '{{ titles_ids[ loop.index ] }}', [{{ titles_ids }}], '{{ loop.index }}' ) )" name="validation"/>
+                    <input type="text" style="padding: 0 0.5em; margin-right: 1em;" placeholder="tag" onkeyup='search_audio(this, "tag", "{{ titles_ids[ loop.index ] }}")' name="tag"/>
+                    <input type="text" style="padding: 0 0.5em; margin-right: 1em;" placeholder="validação"  onkeyup="search_audio(this, 'validation', '{{ titles_ids[ loop.index ] }}' )" name="validation"/>
                 </div>
                 <div class="table100 tableFixHead">
                     <table style="overflow: auto;margin-bottom: 0;" class="table table-striped">
@@ -27,7 +28,7 @@
                             </tr>
                           </thead>
                           <tbody id="tbody_{{ titles_ids[ loop.index ] }}">
-                          {% with titles_ids=titles_ids, outer_index=loop.index %}
+                          {% with sound_type=sound_type %}
                             {% include "table_body.html" %}
                           {% endwith %}
                           </tbody>
