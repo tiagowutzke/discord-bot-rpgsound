@@ -13,7 +13,7 @@
                <div style="display:flex; margin-bottom: 1em;">
                    <span style="margin-right: 1em;">Busca por: </span>
                     <input type="text" style="padding: 0 0.5em; margin-right: 1em;" placeholder="tag" onkeyup="search_audio(this, 'tag', '{{ titles_ids[ loop.index ] }}', [{{ titles_ids }}], '{{ loop.index }}' )" name="tag"/>
-                    <input type="text" style="padding: 0 0.5em; margin-right: 1em;" placeholder="validação"  onkeyup="search_audio(this, 'validation', '{{ titles_ids[ loop.index ] }}' )" name="validation"/>
+                    <input type="text" style="padding: 0 0.5em; margin-right: 1em;" placeholder="validação"  onkeyup="search_audio(this, 'validation', '{{ titles_ids[ loop.index ] }}', [{{ titles_ids }}], '{{ loop.index }}' ) )" name="validation"/>
                 </div>
                 <div class="table100 tableFixHead">
                     <table style="overflow: auto;margin-bottom: 0;" class="table table-striped">
