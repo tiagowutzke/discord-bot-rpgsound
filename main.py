@@ -2,10 +2,6 @@ import os
 import requests
 import functools
 
-# TODO remover isso aqui
-from environ import set_environ_variables
-set_environ_variables()
-
 from app import app
 from werkzeug.utils import secure_filename
 from flask import flash, request, redirect, render_template, url_for
